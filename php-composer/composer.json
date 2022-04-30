@@ -1,0 +1,24 @@
+{
+  "name": "imam/php-composer",
+  "description": "Belajar PHP Composer",
+  "type": "project",
+  "authors": [
+    {
+      "name": "ImamAlfariziSyahputra",
+      "email": "imam.alfarizi.777@gmail.com"
+    }
+  ],
+  "scripts": {
+    "hello": "echo 'Hello World!'"
+  },
+  "autoload": {
+    "psr-4": {
+      "ProgrammerZamanNow\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.0.0",
+    "monolog/monolog": "2.2.0",
+    "mamlzy/php-composer-make-library": "^2.0.0"
+  }
+}
