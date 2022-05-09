@@ -5,6 +5,7 @@ namespace Mamlzy\PhpAuth\Controller;
 use Mamlzy\PhpAuth\App\View;
 use Mamlzy\PhpAuth\Config\Database;
 use Mamlzy\PhpAuth\Exception\ValidationException;
+use Mamlzy\PhpAuth\Model\UserLoginRequest;
 use Mamlzy\PhpAuth\Model\UserRegisterRequest;
 use Mamlzy\PhpAuth\Repository\UserRepository;
 use Mamlzy\PhpAuth\Service\UserService;
@@ -49,9 +50,26 @@ class UserController
 
   public function login()
   {
-    echo 'ok';
-    // View::render("User/login", [
-    //   "title" => 'Login Page'
-    // ]);
+    View::render("User/login", [
+      "title" => 'Login Page'
+    ]);
+  }
+
+  public function postLogin()
+  {
+    $request = new UserLoginRequest();
+    $request->id = $_POST['id'];
+    $request->password = $_POST['password'];
+
+    try {
+      $this->userService->login($request);
+
+      View::redirect('/');
+    } catch (ValidationException $e) {
+      View::render("User/login", [
+        "title" => 'Login Page',
+        "error" => $e->getMessage()
+      ]);
+    }
   }
 }

@@ -89,5 +89,89 @@ namespace Mamlzy\PhpAuth\Controller {
       $this->expectOutputRegex('[Register new User]');
       $this->expectOutputRegex('[That User is already exists!]');
     }
+
+    public function testLogin() //! to render login page
+    {
+      $this->userController->login();
+
+      $this->expectOutputRegex('[Login Page]');
+      $this->expectOutputRegex('[Id]');
+      $this->expectOutputRegex('[Password]');
+      $this->expectOutputRegex('[Sign On]');
+    }
+
+    public function testLoginSuccess()
+    {
+      $user = new User();
+      $user->id = 'ahok';
+      $user->name = 'Ahok';
+      $user->password = password_hash('asd', PASSWORD_BCRYPT);
+
+      $this->userRepository->save($user);
+
+      $_POST['id'] = 'ahok';
+      $_POST['name'] = 'Ahok';
+      $_POST['password'] = 'asd';
+
+      $this->userController->postLogin();
+
+      $this->expectOutputRegex('[Location: /]');
+    }
+
+    public function testLoginValidationError()
+    {
+      $_POST['id'] = '';
+      $_POST['password'] = '';
+
+      $this->userController->postLogin();
+
+      $this->expectOutputRegex('[Login Page]');
+      $this->expectOutputRegex('[Id]');
+      $this->expectOutputRegex('[Password]');
+      $this->expectOutputRegex('[Sign On]');
+      $this->expectOutputRegex('[Id, Password are required!]');
+    }
+
+    public function testLoginUserNotFound()
+    {
+      $user = new User();
+      $user->id = 'ahok';
+      $user->name = 'Ahok';
+      $user->password = password_hash('asd', PASSWORD_BCRYPT);
+
+      $this->userRepository->save($user);
+
+      $_POST['id'] = 'tony';
+      $_POST['password'] = 'asd';
+
+      $this->userController->postLogin();
+
+      $this->expectOutputRegex('[Login Page]');
+      $this->expectOutputRegex('[Id]');
+      $this->expectOutputRegex('[Password]');
+      $this->expectOutputRegex('[Sign On]');
+      $this->expectOutputRegex('[Id or Password is wrong!]');
+    }
+
+    public function testLoginUserWrongPassword()
+    {
+      $user = new User();
+      $user->id = 'ahok';
+      $user->name = 'Ahok';
+      $user->password = password_hash('asd', PASSWORD_BCRYPT);
+
+      $this->userRepository->save($user);
+
+      $_POST['id'] = 'ahok';
+      $_POST['password'] = 'abc';
+
+      $this->userController->postLogin();
+
+      $this->expectOutputRegex('[Login Page]');
+      $this->expectOutputRegex('[Id]');
+      $this->expectOutputRegex('[Password]');
+      $this->expectOutputRegex('[Sign On]');
+      $this->expectOutputRegex('[Id or Password is wrong!]');
+    }
   }
 }
