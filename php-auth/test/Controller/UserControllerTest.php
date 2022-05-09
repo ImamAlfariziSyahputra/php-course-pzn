@@ -7,21 +7,35 @@ namespace Mamlzy\PhpAuth\App {
   }
 }
 
+namespace Mamlzy\PhpAuth\Service {
+  function setcookie(string $name, string $value)
+  {
+    echo "$name: $value";
+  }
+}
+
 namespace Mamlzy\PhpAuth\Controller {
 
   use Mamlzy\PhpAuth\Config\Database;
+  use Mamlzy\PhpAuth\Domain\Session;
   use Mamlzy\PhpAuth\Domain\User;
+  use Mamlzy\PhpAuth\Repository\SessionRepository;
   use Mamlzy\PhpAuth\Repository\UserRepository;
+  use Mamlzy\PhpAuth\Service\SessionService;
   use PHPUnit\Framework\TestCase;
 
   class UserControllerTest extends TestCase
   {
     private UserController $userController;
     private UserRepository $userRepository;
+    private SessionRepository $sessionRepository;
 
     public function setUp(): void
     {
       $this->userController = new UserController();
+
+      $this->sessionRepository = new SessionRepository(Database::getConnection());
+      $this->sessionRepository->deleteAll();
 
       $this->userRepository = new UserRepository(Database::getConnection());
       $this->userRepository->deleteAll();
@@ -116,6 +130,7 @@ namespace Mamlzy\PhpAuth\Controller {
       $this->userController->postLogin();
 
       $this->expectOutputRegex('[Location: /]');
+      $this->expectOutputRegex('[X-MAMLZY-SESSION: ]');
     }
 
     public function testLoginValidationError()
@@ -172,6 +187,29 @@ namespace Mamlzy\PhpAuth\Controller {
       $this->expectOutputRegex('[Password]');
       $this->expectOutputRegex('[Sign On]');
       $this->expectOutputRegex('[Id or Password is wrong!]');
+    }
+
+    public function testLogout()
+    {
+      $user = new User();
+      $user->id = 'ahok';
+      $user->name = 'Ahok';
+      $user->password = password_hash('asd', PASSWORD_BCRYPT);
+
+      $this->userRepository->save($user);
+
+      $session = new Session();
+      $session->id = uniqid();
+      $session->userId = $user->id;
+
+      $this->sessionRepository->save($session);
+
+      $_COOKIE[SessionService::$COOKIE_NAME] = $session->id;
+
+      $this->userController->logout();
+
+      $this->expectOutputRegex('[Location: /]');
+      $this->expectOutputRegex('[X-MAMLZY-SESSION: ]');
     }
   }
 }

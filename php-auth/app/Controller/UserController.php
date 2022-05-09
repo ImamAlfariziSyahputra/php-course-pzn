@@ -7,18 +7,24 @@ use Mamlzy\PhpAuth\Config\Database;
 use Mamlzy\PhpAuth\Exception\ValidationException;
 use Mamlzy\PhpAuth\Model\UserLoginRequest;
 use Mamlzy\PhpAuth\Model\UserRegisterRequest;
+use Mamlzy\PhpAuth\Repository\SessionRepository;
 use Mamlzy\PhpAuth\Repository\UserRepository;
+use Mamlzy\PhpAuth\Service\SessionService;
 use Mamlzy\PhpAuth\Service\UserService;
 
 class UserController
 {
   private UserService $userService;
+  private SessionService $sessionService;
 
   public function __construct()
   {
     $connection = Database::getConnection();
     $userRepository = new UserRepository($connection);
     $this->userService = new UserService($userRepository);
+
+    $sessionRepository = new SessionRepository($connection);
+    $this->sessionService = new SessionService($sessionRepository, $userRepository);
   }
 
   public function register()
@@ -62,7 +68,8 @@ class UserController
     $request->password = $_POST['password'];
 
     try {
-      $this->userService->login($request);
+      $response = $this->userService->login($request);
+      $this->sessionService->create($response->user->id); //! Create session
 
       View::redirect('/');
     } catch (ValidationException $e) {
@@ -71,5 +78,12 @@ class UserController
         "error" => $e->getMessage()
       ]);
     }
+  }
+
+  public function logout()
+  {
+    $this->sessionService->destroy();
+
+    View::redirect('/');
   }
 }
