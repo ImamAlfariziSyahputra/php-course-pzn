@@ -1,13 +1,8 @@
 <?php
 
-namespace Mamlzy\PhpAuth\App {
-  function header(string $value)
-  {
-    echo $value;
-  }
-}
-
 namespace Mamlzy\PhpAuth\Middleware {
+
+  require_once __DIR__ . '/../Helper/helper.php';
 
   use Mamlzy\PhpAuth\Config\Database;
   use Mamlzy\PhpAuth\Domain\Session;
