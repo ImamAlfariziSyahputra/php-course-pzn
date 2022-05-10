@@ -1,0 +1,16 @@
+{
+  "message": "Belajar PHP Logging",
+  "context": { "nama": "Mamlzy" },
+  "level": 200,
+  "level_name": "INFO",
+  "channel": "Mamlzy\\PhpLogging\\Test\\FormatterTest",
+  "datetime": "2022-05-10T21:02:36.801295+07:00",
+  "extra": {
+    "hostname": "DESKTOP-LZY",
+    "memory_usage": "4 MB",
+    "git": {
+      "branch": "main",
+      "commit": "d7a9062264bef8ce784bccd025438356c75eddd9"
+    }
+  }
+}

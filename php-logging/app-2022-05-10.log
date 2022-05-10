@@ -1,0 +1,4 @@
+[2022-05-10T21:15:07.201473+07:00] Mamlzy\PhpLogging\Test\RotatingFileTest.INFO: Belajar PHP [] []
+[2022-05-10T21:15:07.206285+07:00] Mamlzy\PhpLogging\Test\RotatingFileTest.INFO: Belajar PHP OOP [] []
+[2022-05-10T21:15:07.207080+07:00] Mamlzy\PhpLogging\Test\RotatingFileTest.INFO: Belajar PHP Web [] []
+[2022-05-10T21:15:07.208067+07:00] Mamlzy\PhpLogging\Test\RotatingFileTest.INFO: Belajar PHP Database [] []

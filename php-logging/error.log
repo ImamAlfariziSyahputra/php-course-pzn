@@ -1,0 +1,4 @@
+[2022-05-10T20:02:48.064659+07:00] Mamlzy\PhpLogging\Test\LevelTest.ERROR: This is error [] []
+[2022-05-10T20:02:48.066646+07:00] Mamlzy\PhpLogging\Test\LevelTest.CRITICAL: This is critical [] []
+[2022-05-10T20:02:48.067637+07:00] Mamlzy\PhpLogging\Test\LevelTest.ALERT: This is alert [] []
+[2022-05-10T20:02:48.070715+07:00] Mamlzy\PhpLogging\Test\LevelTest.EMERGENCY: This is emergency [] []
